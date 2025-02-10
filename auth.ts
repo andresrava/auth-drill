@@ -8,10 +8,23 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "mongodb",
   }),
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    }
+  },
   plugins: [openAPI()],  // api/auth/reference
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Reset your password",
+        text: `Click the link to reset your password: ${url}`,
+      });
+    },
   },
   emailVerification: {
     sendOnSignUp: true,
@@ -26,3 +39,5 @@ export const auth = betterAuth({
     }
   }
 } satisfies BetterAuthOptions);
+
+export type Session = typeof auth.$Infer.Session;
