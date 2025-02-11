@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+// import { auth } from "@/auth";
+// import { headers } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,15 +26,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-});
+//   const session = await auth.api.getSession({
+//     // Para que no saque estos datos del Cache
+//     query: { disableCookieCache: true },
+//     // Para que no saque estos datos del Cache
+//     headers: await headers(),
+// });
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > 
-        <Navbar session={session} />
+        {/* <Navbar session={session} /> */}
+        <Navbar />
         <div className="min-h-screen pt-20 flex flex-col">
           {children}
         </div>

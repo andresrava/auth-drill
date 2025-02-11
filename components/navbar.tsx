@@ -1,12 +1,14 @@
-"use client";
 
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import SignOutButton from "./signout-button";
-import { Session } from "@/auth";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
-export default function Navbar({session}: {session: Session | null}) {
-
+export default async function Navbar() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   return (
     <nav className="flex justify-between items-center py-3 px-4 fixed top-0 left-0 right-0 z-50 bg-slate-100">
       <Link href="/" className="text-x1 font-bold">

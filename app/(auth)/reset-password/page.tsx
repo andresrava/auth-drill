@@ -28,6 +28,8 @@ function ResetPasswordContent() {
 	const error = searchParams.get("error");
 	const [isPending, setIsPending] = useState(false);
 
+	const token = searchParams.get("token");
+
 	const form = useForm<z.infer<typeof resetPasswordSchema>>({
 		resolver: zodResolver(resetPasswordSchema),
 		defaultValues: {
@@ -40,6 +42,7 @@ function ResetPasswordContent() {
 		setIsPending(true);
 		const { error } = await authClient.resetPassword({
 			newPassword: data.password,
+			token: token || undefined,
 		});
 		if (error) {
 			toast({
