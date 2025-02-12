@@ -13,16 +13,31 @@ export default async function authMiddleware(request: NextRequest) {
   const isPasswordRoute = passwordRoutes.includes(pathName);
   const isAdminRoute = adminRoutes.includes(pathName); 
 //  Hay que hacer una request porque el servidor no tiene acceso a las cookies, corre en edge runtime
-  const { data: session } = await betterFetch<Session>(
-    "/api/auth/get-session",
-    {
-      baseURL: process.env.BETTER_AUTH_URL,
-      headers: {
-        //get the cookie from the request
-        cookie: request.headers.get("cookie") || "",
-      },
+
+let session: Session | null = null;
+
+try {
+  const { data } = await betterFetch<Session>("/api/auth/get-session", {
+    baseURL: process.env.BETTER_AUTH_URL,
+    headers: {
+      cookie: request.headers.get("cookie") || "",
     },
-  );
+  });
+  session = data;
+} catch (error) {
+  console.error("Failed to fetch session:", error);
+}
+
+  // const { data: session } = await betterFetch<Session>(
+  //   "/api/auth/get-session",
+  //   {
+  //     baseURL: process.env.BETTER_AUTH_URL,
+  //     headers: {
+  //       //get the cookie from the request
+  //       cookie: request.headers.get("cookie") || "",
+  //     },
+  //   },
+  // );
 
   if (!session) {
     if (isAuthRoute || isPasswordRoute) {
