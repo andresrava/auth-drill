@@ -5,7 +5,6 @@ import type { Session } from "@/auth";
 const authRoutes = ["/sign-in", "/sign-up"];
 const passwordRoutes = ["/reset-password", "/forgot-password"];
 const adminRoutes = ["/admin"];
-// const adminRoutes = ["/admin"]; 
 
 export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
@@ -18,6 +17,7 @@ let session: Session | null = null;
 
 try {
   const { data } = await betterFetch<Session>("/api/auth/get-session", {
+    // baseURL: process.env.BETTER_AUTH_URL,
     baseURL: process.env.BETTER_AUTH_URL,
     headers: {
       cookie: request.headers.get("cookie") || "",
